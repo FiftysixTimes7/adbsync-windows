@@ -4,14 +4,12 @@ adbsync-windows
 adbsync-windows is a tool to synchronize files between a Windows PC and an Android
 device using the ADB (Android Debug Bridge).
 
-This is a modified version of Google's adb-sync(https://github.com/google/adb-sync)
-to make it run on Windows.
+This is a fork of Google's adb-sync(https://github.com/google/adb-sync) to make it
+run on Windows. Since `os` module treats `'/'` and `'\\'` equally on windows, it
+doesn't require much effort to fix it. But I decided to fork the original project
+to distinguish between two systems.
 
 Licensed under GPL-3.0 or later.
-
-WARNING
--------
-This project is still WIP. It may cause file corruption.
 
 Related Projects
 ================
@@ -19,7 +17,7 @@ Related Projects
 Before getting used to this, please review this list of projects that are
 somehow related to adbsync-windows and may fulfill your needs better:
 
-* [adb-sync](https://github.com/google/adb-sync) is the original project.
+* [adb-sync](https://github.com/google/adb-sync) is the original project for Linux.
 * [rsync](http://rsync.samba.org/) is a file synchronization tool for local
   (including FUSE) file systems or SSH connections. This can be used even with
   Android devices if rooted or using an app like
@@ -59,12 +57,8 @@ PC Side
 
 * Install the [Android SDK](http://developer.android.com/sdk/index.html) (the
   stand-alone Android SDK "for an existing IDE" is sufficient). Alternatively,
-  some Linux distributions come with a package named like "android-tools-adb"
-  that contains the required tool.
-* Make sure "adb" is in your PATH. If you use a package from your Linux
-  distribution, this should already be the case; if you used the SDK, you
-  probably will have to add an entry to PATH in your ~/.profile file, log out
-  and log back in.
+  you can install adb with scoop.
+* Make sure "adb" is in your PATH. Or you need to specify `-e <Path to adb>`.
 * `git clone https://github.com/fiftysixtimes7/adbsync-windows`
 
 Usage
@@ -96,6 +90,8 @@ To copy all downloads from your device to your PC, type:
 ```
 adbsync-windows --reverse /sdcard/Download/ ~/Downloads
 ```
+
+PS: Note the slashes.
 
 Contributing
 ============

@@ -1,14 +1,13 @@
 """Sync files from/to an Android device.
 
 Copyright 2014 Google Inc, 2020 FiftysixTimes7.
-This is a modified version of Google's adb-sync(https://github.com/google/adb-sync) to make it run on Windows.
+This is a fork of Google's adb-sync(https://github.com/google/adb-sync) to make it run on Windows.
 A copy of Apache-2.0 license could be obtained in Apache-2.0.txt.
 
 The project is licensed under GPL-3.0 or later.
 See COPYING for the full text.
 """
 
-from __future__ import unicode_literals
 import argparse
 import locale
 import logging
@@ -202,14 +201,13 @@ class AdbFileSystem(GlobLike, OSLike):
         """Tests the adb connection."""
         # TODO: Complete the test string.
         # This string contain some evil. The original string doesn't work on
-        # windows, so I delete '\xc0\xaf\xff\xc2\xbf' and keep the rest as is.
-        # The original string also doesn't include percent signs.
+        # windows(probably because subprocess use str on windows), so I delete
+        # '\xc0\xaf\xff\xc2\xbf' and keep the rest as is. The original string
+        # also doesn't include percent signs.
         # Note this code uses 'date' and not 'echo', as date just calls strftime
         # while echo does its own backslash escape handling additionally to the
         # shell's. Too bad printf "%s\n" is not available.
-        test_strings = [
-            b'(', b'(;  #`ls`$PATH\'"(\\\\\\\\){};!'
-        ]
+        test_strings = [b'(', b'(;  #`ls`$PATH\'"(\\\\\\\\){};!']
         for test_string in test_strings:
             good = False
             with Stdout(self.adb +
@@ -666,15 +664,17 @@ def FixPath(src: bytes, dst: bytes) -> Tuple[bytes, bytes]:
     append = b''
     pos = src.rfind(b'/')
     if pos >= 0:
-        if src.endswith(b'/'):
+        if src.endswith(b'/') or src.endswith(b'\\'):
             # Final slash: copy to the destination "as is".
             pass
         else:
             # No final slash: destination name == source name.
             append = src[pos:]
     else:
-        # No slash at all - use same name at destination.
-        append = b'/' + src
+        pos = src.rfind(b'\\')
+        if pos < 0:
+            # No slash at all - use same name at destination.
+            append = b'/' + src
     # Append the destination file name if any.
     # BUT: do not append "." or ".." components!
     if append != b'/.' and append != b'/..':

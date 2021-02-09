@@ -93,7 +93,23 @@ adbsync-windows --reverse /sdcard/Download/ ~/Downloads
 
 PS: Note the slashes.
 
+ADB Fetch
+=========
+
+This project also comes with a handy script which enables you to fetch your Android 
+file easily. (Currently limited to Windows, contributions are welcomed.)
+
+To setup, you need to edit these 3 lines in `adb_fetch.py`:
+
+```
+IP = ''
+ADB_PATH = 'adb'
+DESTINATION = '.'
+```
+
+Then you can use `<tab>` to autocomplete the path and fetch the file (or folder).
+
 Contributing
 ============
 
-Patches to this project are very welcome.
+Patches to this project are very welcome, as long as you repect GPL-3.0 or later.

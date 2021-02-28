@@ -42,7 +42,7 @@ while True:
         else:
             with subprocess.Popen(f'{ADB_PATH} shell ls {folder.as_posix()}', shell=True, stdout=subprocess.PIPE) as ls:
                 ls.wait()
-                output = ls.stdout.read().decode().split()
+                output = [x.decode().strip() for x in ls.stdout.readlines()]
             for x in output:
                 if x[:len(name)] == name:
                     candidate.append(x)
@@ -55,7 +55,7 @@ while True:
         if buffer == '/sdcard/':
             print('Attempting to fetch root, aborted.')
             continue
-        if not os.system(f'{ADB_PATH} pull -a {buffer} {DESTINATION}'):
+        if not os.system(f'{ADB_PATH} pull -a "{buffer}" {DESTINATION}'):
             break
     elif key == '\x08':  # ctrl-c
         if len(buffer) > 8:
